@@ -1,0 +1,6 @@
+@FileProcessing.CleanArchitecture_HostAddress = http://localhost:5034
+
+GET {{FileProcessing.CleanArchitecture_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
