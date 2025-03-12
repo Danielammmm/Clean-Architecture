@@ -1,4 +1,5 @@
 ﻿using FP.Application.Interfaces;
+using FP.Application.Services;
 using FP.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +16,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuración de Dependency Injection con Logging
+// Configuración de Dependency Injection
 builder.Services.AddSingleton<IConfigurationService, ConfigurationService>();
+builder.Services.AddSingleton<IFileService, FileService>();
 
 var app = builder.Build();
 
@@ -30,3 +32,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
