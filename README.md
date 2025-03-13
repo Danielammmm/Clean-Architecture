@@ -1,49 +1,59 @@
-# FP.API - Clean Architecture Base
+# Sistema de Procesamiento de Archivos
 
-## 📌 Descripción
-Este proyecto implementa **Clean Architecture** con una estructura modular que permite escalabilidad y facilidad de mantenimiento. Actualmente, proporciona un servicio de configuración expuesto a través de una API.
+## Descripción del Proyecto
+Este proyecto es un sistema de procesamiento de archivos que permite guardar y leer archivos mediante una API REST, aplicando principios de arquitectura limpia, desarrollo basado en pruebas (TDD), inyección de dependencias (DI) y el principio de responsabilidad única (SRP).
 
-## 🏗 Estructura del Proyecto
-El código está organizado en **cuatro capas principales**:
+---
 
-- **Domain**: Contiene las entidades y contratos del sistema.
-- **Application**: Define la lógica de negocio y las interfaces de los servicios.
-- **Infrastructure**: Implementa la lógica concreta, como el acceso a datos y la configuración.
-- **API (Presentation)**: Expone los endpoints de la aplicación.
-
-## 🚀 Características Implementadas
-- **Carga de configuración desde `appsettings.json`**.
-- **Exposición de la configuración a través del endpoint `/api/config`**.
-- **Uso de Swagger para documentación de la API**.
-- **Logging con `ILogger<T>` para registrar eventos importantes**.
-
-## ⚙ Instalación y Ejecución
-### 1. Clonar el Repositorio
-```sh
- git clone https://github.com/tu-repo/FP.API.git](https://github.com/Danielammmm/Clean-Architecture.git
- cd FP.API
+## 📂 Estructura del Proyecto
+```
+📂 FP.CleanArchitecture
+├── 📂 FP.API           # API principal (Presentación)
+├── 📂 FP.Application   # Lógica de negocio
+├── 📂 FP.Domain        # Entidades y contratos
+├── 📂 FP.Infrastructure # Implementaciones concretas
+├── 📂 FP.Tests         # Pruebas unitarias con MSTest
 ```
 
-### 2. Restaurar Dependencias
+Cada módulo sigue **Clean Architecture** y está diseñado para ser desacoplado y reutilizable.
+
+---
+
+## 🔹 Técnicas Aplicadas
+-  **Clean Architecture**: Organización del código en capas separadas.  
+-  **TDD (Test-Driven Development)**: Desarrollo basado en pruebas antes de la implementación final.  
+-  **Dependency Injection (DI)**: Uso de `ILogger<T>` y `IConfigurationService` en los servicios.  
+-  **SRP (Single Responsibility Principle)**: `FileManager` maneja archivos mientras `FileService` se encarga del servicio.  
+
+---
+
+## 🚀 Cómo Ejecutar el Proyecto
+
+1. **Clonar el repositorio**
 ```sh
-dotnet restore
+git clone <repo-url>
+cd FP.CleanArchitecture
 ```
 
-### 3. Ejecutar la Aplicación
+2. **Ejecutar la API**
 ```sh
 dotnet run --project FP.API
 ```
 
-### 4. Probar la API en Swagger
-Abrir en el navegador:
-```
-https://localhost:5001/swagger
-```
+3. **Probar en Swagger**
+Abrir `https://localhost:xxxx/swagger` para probar los endpoints:
+- `GET /api/config` → Cargar configuración.
+- `POST /api/files/save` → Guardar archivo.
+- `GET /api/files/read` → Leer archivo.
 
-## 📌 Siguientes Mejoras
-- Implementar **Dependency Injection** en otros servicios.
-- Agregar **pruebas unitarias** con TDD.
-- Aplicar **Single Responsibility Principle** en nuevas funcionalidades.
-- Integrar almacenamiento con una base de datos.
+---
 
+## 🛠 Tecnologías Usadas
+- **.NET 9**
+- **MSTest** (para pruebas)
+- **Swagger** (documentación de API)
+- **Microsoft.Extensions.Logging** (logging)
+- **Microsoft.Extensions.Configuration** (manejo de configuración)
+
+---
 
