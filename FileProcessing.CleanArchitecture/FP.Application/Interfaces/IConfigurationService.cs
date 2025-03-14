@@ -7,3 +7,4 @@ namespace FP.Application.Interfaces
         ConfigSettings GetConfiguration();
     }
 }
+

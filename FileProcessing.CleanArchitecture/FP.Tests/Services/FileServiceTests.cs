@@ -44,7 +44,7 @@ namespace FP.Tests.Services
             // Act
             _fileService.SaveFile(_testFilePath, "Hello, TDD!");
 
-            // 🛠️ Imprimir la ruta que estamos buscando
+            // Imprimir la ruta que estamos buscando
             Console.WriteLine($"Checking file at: {_testFilePath}");
 
             // Assert
