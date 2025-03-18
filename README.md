@@ -20,10 +20,10 @@ Cada módulo sigue **Clean Architecture** y está diseñado para ser desacoplado
 ---
 
 ## 🔹 Técnicas Aplicadas
--  **Clean Architecture**: Organización del código en capas separadas.  
--  **TDD (Test-Driven Development)**: Desarrollo basado en pruebas antes de la implementación final.  
--  **Dependency Injection (DI)**: Uso de `ILogger<T>` y `IConfigurationService` en los servicios.  
--  **SRP (Single Responsibility Principle)**: `FileManager` maneja archivos mientras `FileService` se encarga del servicio.  
+-  **Clean Architecture**: Organización del código en capas separadas. [**Descargar investigación**](https://github.com/Danielammmm/Clean-Architecture/blob/92c36b2c59002bdfa8eb078e73f9a0b83b6de825/Investigaciones%20y%20aplicaciones/CA.docx) 
+-  **TDD (Test-Driven Development)**: Desarrollo basado en pruebas antes de la implementación final. [**Descargar investigación**](https://github.com/Danielammmm/Clean-Architecture/blob/92c36b2c59002bdfa8eb078e73f9a0b83b6de825/Investigaciones%20y%20aplicaciones/TDD.docx)  
+-  **Dependency Injection (DI)**: Uso de `ILogger<T>` y `IConfigurationService` en los servicios.  [**Descargar investigación**](https://github.com/Danielammmm/Clean-Architecture/blob/92c36b2c59002bdfa8eb078e73f9a0b83b6de825/Investigaciones%20y%20aplicaciones/DI.docx) 
+-  **SRP (Single Responsibility Principle)**: `FileManager` maneja archivos mientras `FileService` se encarga del servicio.  [**Descargar investigación**](https://github.com/Danielammmm/Clean-Architecture/blob/92c36b2c59002bdfa8eb078e73f9a0b83b6de825/Investigaciones%20y%20aplicaciones/SRP.docx) 
 
 ---
 
