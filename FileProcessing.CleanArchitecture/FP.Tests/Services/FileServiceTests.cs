@@ -1,5 +1,7 @@
-﻿using FP.Application.Services;
+﻿using FP.Application.Interfaces;
+using FP.Infrastructure.Persistence;
 using FP.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -18,24 +20,14 @@ namespace FP.Tests.Services
         [TestInitialize]
         public void Setup()
         {
-            // 🟡 Versión inicial sin optimización (valores hardcodeados)
-            /*
-            _fileService = new FileService(null);
-            */
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase("TestDatabase")  
+                .Options;
 
-            // ✅ Versión optimizada: Configurar Logger y ruta de prueba
-            _testDirectory = Path.Combine(Directory.GetCurrentDirectory(), "TestFiles");
-            _testFilePath = Path.Combine(_testDirectory, "test.txt");
+            var context = new AppDbContext(options);
+            var logger = new LoggerFactory().CreateLogger<FileService>();
 
-            if (!Directory.Exists(_testDirectory))
-            {
-                Directory.CreateDirectory(_testDirectory);
-            }
-
-            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-            _logger = loggerFactory.CreateLogger<FileService>();
-
-            _fileService = new FileService(_logger);
+            _fileService = new FileService(logger, context);
         }
 
         [TestMethod]

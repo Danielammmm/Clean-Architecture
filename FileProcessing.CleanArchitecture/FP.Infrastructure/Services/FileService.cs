@@ -1,8 +1,16 @@
-﻿using FP.Application.Services;
+﻿using FP.Application.Interfaces;
+using FP.Application.DTOs;
+using FP.Infrastructure.Persistence;
 using FP.Infrastructure.Utils;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FP.Domain.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace FP.Infrastructure.Services
 {
@@ -10,41 +18,16 @@ namespace FP.Infrastructure.Services
     {
         private readonly ILogger<FileService> _logger;
         private readonly FileManager _fileManager;
+        private readonly AppDbContext _context;
 
-        public FileService(ILogger<FileService> logger)
+        public FileService(ILogger<FileService> logger, AppDbContext context)
         {
             _logger = logger;
+            _context = context;
             string baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "StoredFiles");
             _fileManager = new FileManager(baseDirectory);
         }
 
-        //  Etapa 1: Función inexistente (Prueba fallida)
-        /*
-        public void SaveFile(string fileName, string content)
-        {
-            // Método no implementado (provocará error en la prueba)
-        }
-
-        public string ReadFile(string fileName)
-        {
-            // Método no implementado (provocará error en la prueba)
-        }
-        */
-
-        // 🟡 Etapa 2: Implementación mínima (Prueba pasa, pero código sin optimizar)
-        /*
-        public void SaveFile(string fileName, string content)
-        {
-            File.WriteAllText(fileName, content);  // No maneja excepciones ni directorio base
-        }
-
-        public string ReadFile(string fileName)
-        {
-            return File.Exists(fileName) ? File.ReadAllText(fileName) : string.Empty; // ⚠️ No maneja logs
-        }
-        */
-
-        // Etapa 3: Implementación optimizada (Versión final mejorada)
         public void SaveFile(string fileName, string content)
         {
             try
@@ -72,5 +55,42 @@ namespace FP.Infrastructure.Services
                 return string.Empty;
             }
         }
+
+        public async Task<List<FileDto>> GetAllFilesAsync()
+        {
+            var files = await _context.Files
+                .FromSqlRaw("EXEC GetAllFiles")
+                .ToListAsync();
+
+            return files.Select(f => new FileDto
+            {
+                FileName = f.FileName,
+                FilePath = f.FilePath
+            }).ToList();
+        }
+
+
+        public async Task<bool> AddFileAsync(FileDto fileDto)
+        {
+            var parameters = new[]
+            {
+        new SqlParameter("@FileName", fileDto.FileName),
+        new SqlParameter("@FilePath", fileDto.FilePath)
+    };
+
+            int rowsAffected = await _context.Database.ExecuteSqlRawAsync("EXEC InsertFileRecord @FileName, @FilePath", parameters);
+            return rowsAffected > 0;
+        }
+
+        public async Task<FileRecord?> GetFileByNameAsync(string fileName)
+        {
+            return _context.Files
+                .FromSqlRaw("EXEC GetFileByName @FileName", new SqlParameter("@FileName", fileName))
+                .AsEnumerable()  
+                .FirstOrDefault();
+        }
+
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using FP.Application.Services;
+﻿using FP.Application.DTOs;
+using FP.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FP.API.Controllers
@@ -15,25 +16,46 @@ namespace FP.API.Controllers
         }
 
         [HttpPost("save")]
-        public IActionResult SaveFile([FromBody] FileRequest request)
+        public async Task<IActionResult> SaveFile([FromBody] FileDto fileDto)
         {
-            _fileService.SaveFile(request.FileName, request.Content);
-            return Ok($"File {request.FileName} saved successfully.");
+            if (fileDto == null || string.IsNullOrEmpty(fileDto.FileName))
+            {
+                return BadRequest("Invalid file data.");
+            }
+
+            bool isSaved = await _fileService.AddFileAsync(fileDto);
+
+            if (!isSaved)
+            {
+                return Conflict($"El archivo {fileDto.FileName} ya existe.");
+            }
+
+            return Ok($"File {fileDto.FileName} saved successfully.");
         }
 
-        [HttpGet("read")]
-        public IActionResult ReadFile([FromQuery] string fileName)
-        {
-            var content = _fileService.ReadFile(fileName);
-            return string.IsNullOrEmpty(content)
-                ? NotFound($"File {fileName} not found.")
-                : Ok(content);
-        }
-    }
 
-    public class FileRequest
-    {
-        public string FileName { get; set; } = string.Empty;
-        public string Content { get; set; } = string.Empty;
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllFiles()
+        {
+            var files = await _fileService.GetAllFilesAsync();
+            return Ok(files);
+        }
+
+
+        [HttpGet("search")]
+        public async Task<IActionResult> GetFileByName([FromQuery] string fileName)
+        {
+            var file = await _fileService.GetFileByNameAsync(fileName);
+
+            if (file == null)
+            {
+                return NotFound($"Archivo {fileName} no encontrado.");
+            }
+
+            return Ok(file);
+        }
+
+
+
     }
 }
