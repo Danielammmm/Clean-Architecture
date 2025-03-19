@@ -100,3 +100,87 @@ dotnet test
 - **FileServiceTests.cs** → Verifica la funcionalidad del servicio de archivos.
 - **ConfigurationServiceTests.cs** → Prueba la carga de configuración desde appsettings.json.
 
+---
+## 📂 Diagrama UML - Sistema de Procesamiento de Archivos
+
+Este diagrama muestra la arquitectura del sistema, incluyendo los controladores, servicios, capa de infraestructura y base de datos.
+
+```mermaid
+classDiagram
+    direction TB
+
+    %% Controladores (Capa de Presentación)
+    class FileController {
+        +SaveFile(fileDto: FileDto) Task<IActionResult>
+        +GetAllFiles() Task<IActionResult>
+        +GetFileByName(fileName: string) Task<IActionResult>
+    }
+
+    class ConfigController {
+        +GetConfig() IActionResult
+    }
+
+    %% Interfaces (Capa de Aplicación)
+    class IFileService {
+        +GetAllFilesAsync() Task<List<FileDto>>
+        +AddFileAsync(fileDto: FileDto) Task<bool>
+        +GetFileByNameAsync(fileName: string) Task<FileRecord?>
+        +SaveFile(fileName: string, content: string) void
+        +ReadFile(fileName: string) string
+    }
+
+    class IConfigurationService {
+        +GetConfiguration() object
+    }
+
+    %% Servicios (Capa de Infraestructura)
+    class FileService {
+        +GetAllFilesAsync() Task<List<FileDto>>
+        +AddFileAsync(fileDto: FileDto) Task<bool>
+        +GetFileByNameAsync(fileName: string) Task<FileRecord?>
+        +SaveFile(fileName: string, content: string) void
+        +ReadFile(fileName: string) string
+    }
+
+    class ConfigurationService {
+        +GetConfiguration() object
+    }
+
+    class FileManager {
+        +WriteToFile(fileName: string, content: string) void
+        +ReadFromFile(fileName: string) string
+    }
+
+    %% Base de Datos (Capa de Persistencia)
+    class AppDbContext {
+        +Files : DbSet<FileRecord>
+    }
+
+    class FileRecord {
+        +int Id
+        +string FileName
+        +string FilePath
+        +DateTime CreatedAt
+    }
+
+    %% Configuración desde appsettings.json
+    class appsettings {
+        +StoragePath : string
+        +MaxFileSize : int
+        +EnableLogging : bool
+        +ConnectionString : string
+    }
+
+    %% Relaciones entre clases
+    FileController --> IFileService : Usa
+    ConfigController --> IConfigurationService : Usa
+    IFileService <|.. FileService : Implementa
+    IConfigurationService <|.. ConfigurationService : Implementa
+    FileService --> AppDbContext : Accede a
+    FileService --> FileManager : Usa
+    FileService --> FileDto : Retorna
+    FileDto --> FileRecord : Se convierte a
+    AppDbContext --> FileRecord : Mapea a la base de datos
+    ConfigurationService --> appsettings : Obtiene configuración
+```
+---
